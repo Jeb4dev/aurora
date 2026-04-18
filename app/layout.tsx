@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { PlausibleAnalytics } from "./components/PlausibleAnalytics";
 
 export const metadata: Metadata = {
   title: "Aurora — Northern Lights forecast",
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-aurora-bg text-gray-200 antialiased min-h-screen">
+        <PlausibleAnalytics />
         {children}
       </body>
     </html>

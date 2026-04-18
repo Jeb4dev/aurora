@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Read(//c/Users/jespe/AppData/Local/Temp/claude/C--Users-jespe-space-weather/2e5c1cb4-cb57-420b-9274-e71d94b8b60d/tasks/**)",
+      "Bash(curl -sS -o /tmp/page.html -w \"status=%{http_code} size=%{size_download}\\\\n\" http://localhost:3000/)",
+      "Bash(grep -oE \"\\(Some sources unavailable:[^<]{0,200}\\)\" /tmp/page.html)",
+      "Bash(curl -sS \"https://services.swpc.noaa.gov/products/noaa-planetary-k-index-forecast.json\")",
+      "Bash(curl -sS \"https://services.swpc.noaa.gov/products/solar-wind/plasma-5-minute.json\")",
+      "Bash(curl -sS \"https://services.swpc.noaa.gov/products/solar-wind/mag-5-minute.json\")",
+      "Bash(curl -sS \"https://services.swpc.noaa.gov/json/ovation_aurora_latest.json\")",
+      "Bash(grep -oE \"\\(Some sources unavailable:[^<\\\\\"]{0,200}\\)\" /tmp/page.html)",
+      "Bash(curl -sS -o /tmp/page-helsinki.html -w \"status=%{http_code} size=%{size_download}\\\\n\" \"http://localhost:3000/?city=helsinki\")",
+      "Bash(grep -oE \"fill=\\\\\\\\\\\\\\\\\\\\\"\\(#ef4444|#facc15|#4ade80\\)\\\\\\\\\\\\\\\\\\\\\"\" /tmp/page.html)",
+      "Bash(grep -oE \"KP Index [—-] \\(History|Upcoming[^<]{0,30}\\)\" /tmp/page.html)",
+      "Bash(grep -oE \"KP[^<]{0,40}\" /tmp/page.html)",
+      "Bash(curl -sS -o /dev/null -w \"kuopio=%{http_code} t=%{time_total}s\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"helsinki=%{http_code} t=%{time_total}s\\\\n\" \"http://localhost:3000/?city=helsinki\")",
+      "Bash(curl -sS -o /dev/null -w \"rovaniemi=%{http_code} t=%{time_total}s\\\\n\" \"http://localhost:3000/?city=rovaniemi\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(netstat -ano)",
+      "Bash(taskkill //PID 2616 //F)"
+    ]
+  }
+}

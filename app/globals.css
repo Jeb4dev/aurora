@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background: #0b0d12;
+  color: #e5e7eb;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Info-screen (landscape, large viewport). Scale up typography. */
+@media (min-width: 1280px) and (min-aspect-ratio: 3/2) {
+  html {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 1600px) and (min-aspect-ratio: 3/2) {
+  html {
+    font-size: 24px;
+  }
+}
+
+@media (min-width: 1920px) and (min-aspect-ratio: 3/2) {
+  html {
+    font-size: 28px;
+  }
+}
+
+/* Respect reduced motion in the rotator */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

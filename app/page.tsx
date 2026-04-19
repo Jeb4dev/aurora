@@ -1,6 +1,7 @@
 import { buildDashboard } from "@/lib/dashboard";
 import { CameraSection } from "./components/CameraSection";
 import { ConditionsSection } from "./components/ConditionsSection";
+import { ExplainerSection } from "./components/ExplainerSection";
 import { ForecastSection } from "./components/ForecastSection";
 import { InfoScreenRotator } from "./components/InfoScreenRotator";
 import { Nav } from "./components/Nav";
@@ -38,6 +39,7 @@ export default async function Page({ searchParams }: { searchParams: SearchParam
         <ForecastSection data={data} />
         <CameraSection data={data} />
         <ConditionsSection data={data} />
+        <ExplainerSection latitude={data.location.latitude} />
         <Footer data={data} />
       </main>
       <InfoScreenRotator enabled={rotateEnabled} intervalSec={Math.max(5, interval)} />

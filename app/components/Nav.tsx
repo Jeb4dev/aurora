@@ -5,6 +5,7 @@ const ITEMS = [
   { id: "forecast", label: "Forecast" },
   { id: "camera", label: "Sky camera" },
   { id: "conditions", label: "Conditions" },
+  { id: "guide", label: "Guide" },
 ];
 
 export function Nav({ location }: { location: string }) {

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const SECTIONS = ["now", "forecast", "camera", "conditions"];
+const SECTIONS = ["now", "forecast", "camera", "conditions", "guide"];
 
 export function InfoScreenRotator({
   enabled,

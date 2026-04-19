@@ -1,45 +1,54 @@
 import type { ProbabilitySample } from "./types";
 
-// Latitude-to-Kp threshold: below this Kp, aurora will not reach the geomagnetic
-// latitude of the observer (rough approximation for northern hemisphere).
-const THRESHOLDS: { maxGeoLat: number; kp: number }[] = [
-  { maxGeoLat: 58, kp: 0 }, // far north (above arctic circle, essentially always possible when dark)
-  { maxGeoLat: 60, kp: 1 },
-  { maxGeoLat: 62, kp: 2 },
-  { maxGeoLat: 64, kp: 3 },
-  { maxGeoLat: 66, kp: 4 },
-  { maxGeoLat: 68, kp: 5 },
-  { maxGeoLat: 70, kp: 6 },
-  { maxGeoLat: 72, kp: 7 },
+// KP → minimum geographic latitude where aurora is visible (approximate).
+// Iterates highest-latitude-first so lat=62.9 correctly returns kp=4.
+const AURORA_THRESHOLDS: { minLat: number; kp: number }[] = [
+  { minLat: 70, kp: 0 },
+  { minLat: 68, kp: 1 },
+  { minLat: 66, kp: 2 },
+  { minLat: 64, kp: 3 },
+  { minLat: 62, kp: 4 },
+  { minLat: 60, kp: 5 },
+  { minLat: 58, kp: 6 },
+  { minLat: 56, kp: 7 },
 ];
 
-function kpThresholdFor(lat: number): number {
-  for (const { maxGeoLat, kp } of THRESHOLDS) {
-    if (lat >= maxGeoLat) return kp;
+export function kpThresholdFor(lat: number): number {
+  for (const { minLat, kp } of AURORA_THRESHOLDS) {
+    if (lat >= minLat) return kp;
   }
-  return 9;
+  return 9; // too far south for visible aurora
 }
 
-export function baseProbability(kp: number, lat: number): number {
+// NOAA OVATION aurora activity % → viewing probability (dark, clear rural site).
+// Calibrated: OVATION 8% → ~36%, 20% → ~65%, 40% → ~85%
+function ovationToProbability(ovation: number): number {
+  if (ovation <= 0) return 0;
+  return Math.round(95 * (1 - Math.exp(-ovation / 18)));
+}
+
+// KP-based floor: rises quickly once KP exceeds latitude threshold, caps at 65%.
+function kpBaseProbability(kp: number, lat: number): number {
   const threshold = kpThresholdFor(lat);
   if (kp < threshold) return 0;
-  // Smooth ramp above threshold. A Kp one step over threshold ~20%, two steps ~50%, etc.
   const over = kp - threshold;
-  const raw = 100 * (1 - Math.exp(-over / 1.5));
-  return Math.min(100, Math.max(0, raw));
+  return Math.min(65, Math.round(65 * (1 - Math.exp(-over / 0.8))));
 }
 
 export function visibleProbability(opts: {
   kp: number;
-  ovation: number; // 0-100 aurora activity
-  cloudCover: number; // 0-100
+  ovation: number;
+  cloudCover: number;
   isDay: boolean;
   latitude: number;
 }): number {
   if (opts.isDay) return 0;
-  const base = Math.max(opts.ovation, baseProbability(opts.kp, opts.latitude));
+  const base = Math.max(
+    ovationToProbability(opts.ovation),
+    kpBaseProbability(opts.kp, opts.latitude),
+  );
   const cloudFactor = Math.max(0, 1 - opts.cloudCover / 100);
-  return Math.round(base * cloudFactor);
+  return Math.min(100, Math.round(base * cloudFactor));
 }
 
 export function shortTermSamples(opts: {
@@ -49,14 +58,31 @@ export function shortTermSamples(opts: {
   isDay: boolean;
   latitude: number;
 }): ProbabilitySample[] {
-  const samples: ProbabilitySample[] = [];
   const base = visibleProbability(opts);
-  // The 0-30 min window in a mobile app is basically a smoothed persistence of
-  // the current activity. Tiny perturbations just give the chart some shape.
-  for (let m = 0; m <= 30; m += 5) {
-    const noise = Math.sin((m / 30) * Math.PI) * 2;
-    const p = Math.max(0, Math.min(100, Math.round(base + noise)));
-    samples.push({ offsetMinutes: m, probability: p });
-  }
-  return samples;
+  return Array.from({ length: 7 }, (_, i) => {
+    const m = i * 5;
+    const noise = Math.sin((m / 30) * Math.PI) * 1.5;
+    return {
+      offsetMinutes: m,
+      probability: Math.max(0, Math.min(100, Math.round(base + noise))),
+    };
+  });
+}
+
+export function probabilityColor(p: number): string {
+  if (p >= 80) return "#a78bfa"; // purple — extraordinary
+  if (p >= 60) return "#ef4444"; // red — high
+  if (p >= 35) return "#f97316"; // orange — moderate-good
+  if (p >= 15) return "#facc15"; // yellow — low
+  if (p > 0) return "#4ade80";   // green — very low
+  return "#6b7280";              // gray — unlikely
+}
+
+export function probabilityLabel(p: number): string {
+  if (p >= 80) return "Extraordinary";
+  if (p >= 60) return "High";
+  if (p >= 35) return "Moderate";
+  if (p >= 15) return "Low";
+  if (p > 0) return "Very low";
+  return "Unlikely";
 }

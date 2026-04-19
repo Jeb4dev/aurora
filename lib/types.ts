@@ -55,6 +55,8 @@ export type Dashboard = {
     cloudCover: number;
     isDay: boolean;
     visibleProbability: number; // 0-100, adjusted for clouds + day
+    best24h: number; // best visibility probability in next 24h
+    best24hKp: number; // KP at that best hour
     rIndex?: number | null;
     rIndexLabel?: string | null;
   };

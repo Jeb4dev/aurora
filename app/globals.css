@@ -1,5 +1,17 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-aurora-bg: #0b0d12;
+  --color-aurora-card: #1a1d24;
+  --color-aurora-line: #262a33;
+  --color-aurora-accent: #a78bfa;
+  --color-aurora-accentDeep: #7c3aed;
+  --color-aurora-green: #4ade80;
+  --color-aurora-yellow: #facc15;
+  --color-aurora-red: #ef4444;
+  --color-aurora-muted: #9ca3af;
+}
+
 :root {
   color-scheme: dark;
 }
@@ -14,25 +26,18 @@ html {
 }
 
 /* Info-screen (landscape, large viewport). Scale up typography. */
-@media (min-width: 1280px) and (min-aspect-ratio: 3/2) {
-  html {
-    font-size: 20px;
-  }
+@media (width >= 1280px) and (aspect-ratio >= 3/2) {
+  html { font-size: 20px; }
 }
 
-@media (min-width: 1600px) and (min-aspect-ratio: 3/2) {
-  html {
-    font-size: 24px;
-  }
+@media (width >= 1600px) and (aspect-ratio >= 3/2) {
+  html { font-size: 24px; }
 }
 
-@media (min-width: 1920px) and (min-aspect-ratio: 3/2) {
-  html {
-    font-size: 28px;
-  }
+@media (width >= 1920px) and (aspect-ratio >= 3/2) {
+  html { font-size: 28px; }
 }
 
-/* Respect reduced motion in the rotator */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
